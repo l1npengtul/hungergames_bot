@@ -1,0 +1,6 @@
+src/main/resources/discord.cfg
+build/resources/main/discord.cfg
+.gradle/6.1/vcsMetadata-1/
+build/generated/
+build/tmp/
+src/test/
