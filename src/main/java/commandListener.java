@@ -27,12 +27,25 @@ public class commandListener extends ListenerAdapter {
 
 
         if (msge.getMessage().getContentRaw().startsWith(prefix + "hg_game")) {
+            String messageToParse = msge.getMessage().getContentRaw();
+            String[] individualMessage = messageToParse.split(" ");
+            List<Player> argumentPlayer = new ArrayList<Player>();
+            for (int i = 0; i < individualMessage.length; i++) {
+                switch (i){
+                    case 0:
+                        break;
+                    case 1:
+                        if()
+                }
+            }
+
+            /*
             try {
                 gameService.startGame(testNames, msge);
 
             }catch (InterruptedException i){
                 i.printStackTrace();
-            }
+            }*/
         }
 
     }

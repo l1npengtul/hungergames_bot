@@ -21,12 +21,17 @@ TODO: PFP and automatic graphic creation
 */
 
 //who is rem
+//i love emilia
 
 
 public class gameService implements Runnable{
 
+    List<String> playerNames = new ArrayList<String>();
+    String gameID;
+    MessageReceivedEvent messageReceivedEvent;
+    int mKillRound;
 
-    public gameService(){
+    public gameService(List<String> names, String assignedGameID, MessageReceivedEvent msgrevent, int kpr){
 
     }
 
@@ -35,7 +40,7 @@ public class gameService implements Runnable{
     }
 
 
-    public static void startGame(String @NotNull [] players, MessageReceivedEvent event) throws InterruptedException {
+    public void startGame(String @NotNull [] players, MessageReceivedEvent event) throws InterruptedException {
 
         RandomNumberGenerate rngGen = new RandomNumberGenerate();
 
@@ -119,7 +124,7 @@ public class gameService implements Runnable{
                             break;
                         //Isekai Truck Fuffilment Death
                         case 1:
-                            player_alive.get(i).die(currentDay, playersKilled, new Player("Isekai Truck"));
+                            player_alive.get(i).die(currentDay, playersKilled, new Player("The Isekai Truck"));
                             playersKilled--;
                             playerDeadToday.add(player_alive.get(i));
                                  sendMessage.sendMessageusingEvent(currentChannel,killMessage.generateIsekaiDeath(player_alive.get(i).getName()));
@@ -174,7 +179,7 @@ public class gameService implements Runnable{
         }
     }
 
-    public static int numberToKill(int remainingAlive,int maxKillRound){
+    public int numberToKill(int remainingAlive,int maxKillRound){
         RandomNumberGenerate rngGen = new RandomNumberGenerate();
         if (remainingAlive > maxKillRound-1){
             return rngGen.generateRandomNumber(1,maxKillRound);
@@ -185,98 +190,6 @@ public class gameService implements Runnable{
         else{
             return 1;
         }
-    }
-}
-
-class Player implements Comparable<Player>{
-    String name,pfpUrl;
-    int healthKits = 0;
-    PLAYER_STATES currentState = PLAYER_STATES.IDLE;
-    int placement = 0;
-    int deathDay;
-    Player killer;
-    List<Player> killedPlayers = new ArrayList<Player>();
-
-
-    public Player(String cname){
-        this.name = cname;
-    }
-
-    public int getDeathDay() {
-        return deathDay;
-    }
-
-    public void setDeathDay(int deathDay) {
-        this.deathDay = deathDay;
-    }
-
-    public int getPlacement() {
-        return placement;
-    }
-
-    public void setPlacement(int placement) {
-        this.placement = placement;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getHealthKits() {
-        return healthKits;
-    }
-
-    public void giveHealthKit() {
-        this.healthKits++;
-    }
-
-    public PLAYER_STATES getCurrentState() {
-        return currentState;
-    }
-
-    public void setWounded(Player wounder){
-        this.killer = wounder;
-        this.currentState = PLAYER_STATES.WOUNDED;
-    }
-
-
-    // Return Boolean = hasDied
-    public boolean woundedTick(int currentDay, int currentPlacement){
-        if (currentState == PLAYER_STATES.WOUNDED){
-            if (healthKits > 0){
-                healthKits--;
-                killer = null;
-                return false;
-            }
-            else{
-                //die(currentDay, currentPlacement);
-                return true;
-            }
-        }
-        else{
-            return false;
-        }
-    }
-
-    public boolean isAlive(){
-        return currentState != PLAYER_STATES.DEAD;
-    }
-
-
-    public void die(int currentDay, int currentPlacement, Player killerName){
-        this.deathDay = currentDay;
-        this.placement = currentPlacement;
-        this.currentState = PLAYER_STATES.DEAD;
-        this.killer = killerName;
-    }
-
-    public void kill(Player killedPlayer){
-        this.killedPlayers.add(killedPlayer);
-    }
-
-    @Override
-    public int compareTo(@NotNull Player other) {
-        return -(Integer.compare(this.placement, other.placement));
     }
 }
 
