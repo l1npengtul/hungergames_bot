@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+// All command parsing happens here
+
 public class commandListener extends ListenerAdapter {
 
     public static boolean isNumeric(String str) {
@@ -21,6 +24,7 @@ public class commandListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent msge){
+        //ignore ourselves and other bots
         if (msge.getAuthor().isBot()) return;
 
         Message message = msge.getMessage();
@@ -76,14 +80,14 @@ public class commandListener extends ListenerAdapter {
                                     String nickToAdd = msge.getGuild().getJDA().getUserById(idToPass.toString()).getName();
                                     usersNames.add(nickToAdd);
                                 }catch (NullPointerException npe){
-                                    sendMessage.sendMessageusingEvent(msge.getTextChannel(), "[ERROR]```" + npe.getClass().getSimpleName()
-                                            + "``` User ( "+ idToPass +") likely doesn't exist, has left, or some other error! Continuing anyways... ");
+                                    sendMessage.sendMessageusingEvent(msge.getTextChannel(), "[ERROR]```" + npe.getMessage() +" : "+npe.getClass().getSimpleName()
+                                            + "``` User ("+ idToPass +") likely doesn't exist, has left, or some other error! Continuing anyways... ");
                                 }catch (NumberFormatException nfe){
-                                    sendMessage.sendMessageusingEvent(msge.getTextChannel(), "[ERROR]```" + nfe.getClass().getSimpleName()
+                                    sendMessage.sendMessageusingEvent(msge.getTextChannel(), "[ERROR]```" + nfe.getMessage() + " : "+nfe.getClass().getSimpleName()
                                             + "``` The ID probably isn't valid or some other error!");
                                 }
                             }
-                            gameService game = new gameService(usersNames, System.currentTimeMillis()+"gameCSVMENT", msge, 4);
+                            gameService game = new gameService(usersNames, System.currentTimeMillis()+"gameCSVMENT", msge, 1);
                             new Thread(game).start();
 
                         }

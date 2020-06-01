@@ -29,13 +29,14 @@ public class gameService implements Runnable{
     List<String> playerNames = new ArrayList<String>();
     String gameID;
     MessageReceivedEvent messageReceivedEvent;
-    int mKillRound;
+    int mKillRound, minKillRound;
 
     public gameService(List<String> names, String assignedGameID, MessageReceivedEvent msgrevent, int kpr){
         this.playerNames = names;
         this.gameID = assignedGameID;
         this.messageReceivedEvent = msgrevent;
         this.mKillRound = kpr;
+        this.minKillRound = (int) Math.floor((double)names.size() / (double)kpr);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class gameService implements Runnable{
         } catch (Exception e) {
             sendMessage.sendMessageusingEvent(this.messageReceivedEvent.getTextChannel() ,"Exception in thread: " +
                     Thread.currentThread().getId() + "("  + Thread.currentThread().getName() + ") with game ID + " + this.gameID +
-                    ". The thread exited with: ```" + e.getClass().getSimpleName() + "```" );
+                    ". The thread exited with: ```" + e.getMessage() + " : " + e.getClass().getSimpleName()+ "```" );
             sendMessage.sendMessageusingEvent(this.messageReceivedEvent.getTextChannel(),
                     "Exiting Thread...");
             e.printStackTrace();
