@@ -4,12 +4,12 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
-import static java.util.Collections.shuffle;
-import static java.util.Collections.sort;
+import static java.util.Collections.*;
 
 
 /*
@@ -32,15 +32,37 @@ public class gameService implements Runnable{
     int mKillRound;
 
     public gameService(List<String> names, String assignedGameID, MessageReceivedEvent msgrevent, int kpr){
-
+        this.playerNames = names;
+        this.gameID = assignedGameID;
+        this.messageReceivedEvent = msgrevent;
+        this.mKillRound = kpr;
     }
 
+    @Override
     public void run(){
-
+        try {
+            String[] names = new String[this.playerNames.size()];
+            this.playerNames.toArray(names);
+            startGame_str(names, this.messageReceivedEvent);
+            //throwException();
+            //TODO: ADD OPTION FOR gAME USING IMAGES
+        } catch (Exception e) {
+            sendMessage.sendMessageusingEvent(this.messageReceivedEvent.getTextChannel() ,"Exception in thread: " +
+                    Thread.currentThread().getId() + "("  + Thread.currentThread().getName() + ") with game ID + " + this.gameID +
+                    ". The thread exited with: ```" + e.getClass().getSimpleName() + "```" );
+            sendMessage.sendMessageusingEvent(this.messageReceivedEvent.getTextChannel(),
+                    "Exiting Thread...");
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+            return;
+        }
     }
 
+    private void throwException() throws InterruptedException{
+        throw new InterruptedException();
+    }
 
-    public void startGame(String @NotNull [] players, MessageReceivedEvent event) throws InterruptedException {
+    public void startGame_str(String @NotNull [] players, MessageReceivedEvent event) throws InterruptedException {
 
         RandomNumberGenerate rngGen = new RandomNumberGenerate();
 
@@ -80,7 +102,7 @@ public class gameService implements Runnable{
                 }
             }
 
-            int toDie = numberToKill(player_alive.size(), 4);
+            int toDie = numberToKill(player_alive.size(), this.mKillRound);
             int deadToday = 0;
 
             shuffle(player_alive);
